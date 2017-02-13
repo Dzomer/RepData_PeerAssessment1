@@ -1,16 +1,13 @@
----
-title: "Reproducible Research: Peer Assessment 1 by Deborah Zomer"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1 by Deborah Zomer
 
-```{r setoptions, echo = TRUE}
+
+```r
 options(scipen = 999)
 ```
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
   unzip("activity.zip")
   activity <- read.csv("activity.csv", header= TRUE)
 ```
@@ -19,40 +16,50 @@ options(scipen = 999)
 
 Histogram of steps per day
 
-```{r}
+
+```r
 # Aggregate Sum Steps per day
   activityperday<-aggregate(activity$steps, by=list(Date=activity$date), FUN=sum)
 # Histogram
   hist(activityperday$x, xlab = "Step Ranges", main="Histogram of Step Ranges")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
 Mean and median of the total number of steps taken per day
 
-```{r}
+
+```r
   mean_activity<-round(mean(activityperday$x,na.rm = TRUE),digits = 2)
   median_activity<-median(activityperday$x,na.rm = TRUE)
 ```
-The mean steps per day is `r mean_activity ` and the median is `r median_activity `
+The mean steps per day is 10766.19 and the median is 10765
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 # Aggregate Mean Steps per interval
   activityperinterval<-aggregate(activity$steps, by=list(Interval=activity$interval), FUN=mean, na.rm = TRUE)
 
 # Time series plot
   plot(activityperinterval$Interval,activityperinterval$x, type = "l", xlab = "Day Interval", ylab = "Average Steps", main = "Average daily activity pattern")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
 # Interval with max number of steps
   max_steps<-max(activityperinterval$x)
   max_interval<-subset(activityperinterval,x==max_steps)$Interval
 ```
 
-The interval with maximum number of steps is `r max_interval `
+The interval with maximum number of steps is 835
 
 ## Imputing missing values
 
-```{r}
+
+```r
 # Calculate Total Missing Values
   total_na<-sum(is.na(activity$steps))
 
@@ -63,33 +70,37 @@ The interval with maximum number of steps is `r max_interval `
 
 Histogram of steps per day with no null values
 
-```{r}
+
+```r
 # Aggregate Sum Steps per day
   activityperday_No_NAs<-aggregate(activity_No_NAs$steps, by=list(Date=activity_No_NAs$date), FUN=sum)
 
   # Histogram
   hist(activityperday_No_NAs$x, xlab = "Step Ranges", main="Histogram of Step Ranges with No Null Values")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 Mean and median of the total number of steps taken per day with no null values
 
-```{r}
+
+```r
   mean_activity_No_NAs<-round(mean(activityperday_No_NAs$x,na.rm = TRUE),digits = 2)
   median_activity_No_NAs<-round(median(activityperday_No_NAs$x,na.rm = TRUE),digits=2)
 ```
-The mean steps per day with no Null values is `r mean_activity_No_NAs ` and the median is `r median_activity_No_NAs `
+The mean steps per day with no Null values is 10766.19 and the median is 10766.19
 
-The mean steps per day initially was `r mean_activity ` and after replacing null values it is `r mean_activity_No_NAs `
+The mean steps per day initially was 10766.19 and after replacing null values it is 10766.19
 
-The median steps per day initially was `r median_activity ` and after replacing null values it is `r median_activity_No_NAs`
+The median steps per day initially was 10765 and after replacing null values it is 10766.19
 
 The impact on the total per day is that there are many more steps per day but the mean is the same and median almost the same.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 # Create a copy of the Activity dataframe
   activity1<-activity_No_NAs
 
@@ -111,7 +122,7 @@ The impact on the total per day is that there are many more steps per day but th
 
   xyplot(x~Interval | WD, data = activityperintervalperWD,layout = c(1, 2), type = "l",
          xlab = "Interval", ylab = "Number of steps")
-
-  
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
   
